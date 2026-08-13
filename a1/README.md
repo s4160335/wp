@@ -5,8 +5,8 @@
 
 | Item | Details |
 |---|---|
-| Student name | TODO |
-| Student ID | TODO |
+| Student name | Abdifatah Mohamed|
+| Student ID | s4160335|
 | GitHub repository URL | TODO |
 | Deployed website URL | TODO |
 
