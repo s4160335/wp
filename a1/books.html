@@ -75,10 +75,168 @@
         </nav>
     </header>
 
-    <main>
-        <div class="container py-5">
-            <h1>All Books</h1>
-            <p>Books page content will be added here.</p>
+    <main class="books-page">
+        <div class="container books-container py-5">
+            
+            <!-- Page Heading-->
+             <h1 class="books-title mb-4">
+                <span class="material-icons">library_books</span>
+                All Books
+             </h1>
+
+             <!-- Status Tilter -->
+              <section class="book-filter mb-4">
+                <label for="statusFilter">Filter by Status:</label>
+
+                <select id="statusFilter" class="form-select form-select-sm">
+                    <option value="all">Show All</option>
+                    <option value="available">Available</option>
+                    <option value="reserved">Reserved</option>
+                    <option value="sold">Sold</option>
+                </select>
+              </section>
+
+              <!--Books Table -->
+              <section class="books-table-wrapper">
+                <div class="table-responsive">
+
+                    <table class="table books-table align-middle mb-0">
+                        <tbody>
+                            <tr data-status="available">
+                                <td>The Midnight Library</td>
+                                <td>Matt Haig</td>
+                                <td>Fiction</td>
+                                <td>2020</td>
+                                <td>$24.99</td>
+                                <td>
+                                    <span class="badge status-available">Available</span>
+                                </td>
+                            </tr>
+
+                            <tr data-status="available">
+                                <td>Project Hail Mary</td>
+                                <td>Andy Weir</td>
+                                <td>Science Fiction</td>
+                                <td>2021</td>
+                                <td>$28.99</td>
+                                <td>
+                                    <span class="badge status-available">Available</span>
+                                </td>
+                            </tr>
+
+                            <tr data-status="available">
+                                <td>Dune</td>
+                                <td>Frank Herbert</td>
+                                <td>Science Fiction</td>
+                                <td>1965</td>
+                                <td>$22.99</td>
+                                <td>
+                                    <span class="badge status-available">Available</span>
+                                </td>
+                            </tr>
+
+                            <tr data-status="available">
+                                <td>The Hobbit</td>
+                                <td>J.R.R. Tolkien</td>
+                                <td>Fanttasy</td>
+                                <td>1937</td>
+                                <td>$18.99</td>
+                                <td>
+                                    <span class="badge status-available">Available</span>
+                                </td>
+                            </tr>
+
+                            <tr data-status="available">
+                                <td>1984</td>
+                                <td>George Orwell</td>
+                                <td>Dystopian</td>
+                                <td>1949</td>
+                                <td>$19.99</td>
+                                <td>
+                                    <span class="badge status-available">Available</span>
+                                </td>
+                            </tr>
+
+                            <tr data-status="reserved">
+                                <td>Pride and Prejudice</td>
+                                <td>Jane Austen</td>
+                                <td>Romance</td>
+                                <td>1813</td>
+                                <td>$14.99</td>
+                                <td>
+                                    <span class="badge status-reserved">Reserved</span>
+                                </td>
+                            </tr>
+
+                            <tr data-status="available">
+                                <td>To Kill a Mockingbird</td>
+                                <td>Harper Lee</td>
+                                <td>Fiction</td>
+                                <td>1960</td>
+                                <td>$19.99</td>
+                                <td>
+                                    <span class="badge status-available">Available</span>
+                                </td>
+                            </tr>
+
+                            <tr data-status="sold">
+                                <td>The Great Gatsby</td>
+                                <td>F. Scott Fitzgerald</td>
+                                <td>Fiction</td>
+                                <td>1925</td>
+                                <td>$15.99</td>
+                                <td>
+                                    <span class="badge status-sold">Sold</span>
+                                </td>
+                            </tr>
+
+                            <tr data-status="available">
+                                <td>Educated</td>
+                                <td>Tara Westover</td>
+                                <td>Memoir</td>
+                                <td>2018</td>
+                                <td>$20.99</td>
+                                <td>
+                                    <span class="badge status-available">Available</span>
+                                </td>
+                            </tr>
+
+                            <tr data-status="reserved">
+                                <td>The Seven Husbands</td>
+                                <td>Taylor Jenkins Reid</td>
+                                <td>Fiction</td>
+                                <td>2017</td>
+                                <td>$18.99</td>
+                                <td>
+                                    <span class="badge status-reserved">Reserved</span>
+                                </td>
+                            </tr>
+
+                            <tr data-status="available">
+                                <td>Atomic Habits</td>
+                                <td>James Clear</td>
+                                <td>Self-Help</td>
+                                <td>2018</td>
+                                <td>$26.99</td>
+                                <td>
+                                    <span class="badge status-available">Available</span>
+                                </td>
+                            </tr>
+
+                            <tr data-status="available">
+                                <td>Sapiens</td>
+                                <td>Yuval Noah Harari</td>
+                                <td>Non-Fiction</td>
+                                <td>2014</td>
+                                <td>$27.99</td>
+                                <td>
+                                    <span class="badge status-available">Available</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+              </section>
         </div>
     </main>
 
