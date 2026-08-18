@@ -15,7 +15,7 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	
-	<link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Elms+Sans:wght@400;500;600;700&family=Righteous:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 	
 	<!-- Material Icons -->
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -75,7 +75,7 @@
         </nav>
     </header>
 
-    <main class="books-page">
+     <main class="books-page">
         <div class="container books-container py-5">
             
             <!-- Page Heading-->
@@ -85,7 +85,7 @@
              </h1>
 
              <!-- Status Tilter -->
-              <section class="book-filter mb-4">
+              <div class="book-filter mb-4">
                 <label for="statusFilter">Filter by Status:</label>
 
                 <select id="statusFilter" class="form-select form-select-sm">
@@ -94,10 +94,10 @@
                     <option value="reserved">Reserved</option>
                     <option value="sold">Sold</option>
                 </select>
-              </section>
+              </div>
 
               <!--Books Table -->
-              <section class="books-table-wrapper">
+              <div class="books-table-wrapper">
                 <div class="table-responsive">
 
                     <table class="table books-table align-middle mb-0">
@@ -236,13 +236,14 @@
                         </tbody>
                     </table>
                 </div>
-              </section>
+              </div>
         </div>
     </main>
 
+
     <!-- Footer -->
     <footer>
-        <div class="container py-3 ">
+        <div class="container text-center py-2 ">
             <p class="mb-0">
                 &copy; 2026 s4160335. Your Gateway to Books.
             </p>
