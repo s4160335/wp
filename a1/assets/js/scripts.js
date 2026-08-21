@@ -120,3 +120,12 @@ if (coverImage) {
 		imagePreviewContainer.classList.remove("d-none");
 	});
 }
+
+// Prevent Add Book form submission
+const addBookForm = document.getElementById("addBookForm");
+
+if (addBookForm) {
+	addBookForm.addEventListener("submit", function (event) {
+		event.preventDefault();
+	});
+}
