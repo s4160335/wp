@@ -4,15 +4,31 @@ $message ="";
 $errors = [];
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $title = trim($_POST["bookTitle"]);
-    $author = trim($_POST["bookAuthor"]);
-    $genre = trim($_POST["genre"]);
-    $publicationYear = (int) $_POST["publication_year"];
-    $isbn = trim($_POST["isbn"]);
-    $description = trim($_POST["description"]);
-    $bookCondition = $_POST["book_condition"];
-    $price = (float) $_POST["price"];
-    $status = $_POST["status"];
+    $title = trim($_POST["bookTitle"] ?? "");
+    $author = trim($_POST["bookAuthor"] ?? "");
+    $genre = trim($_POST["genre"] ?? "");
+    $publicationYear = (int) ($_POST["publication_year"] ?? 0);
+    $isbn = trim($_POST["isbn"] ?? "");
+    $description = trim($_POST["description"] ?? "");
+    $bookCondition = $_POST["book_condition"] ?? "";
+    $price = (float) ($_POST["price"] ?? 0);
+    $status = $_POST["status"] ?? "";
+
+    if ($title === "" || $author === "" || $genre === "" || $publicationYear <= 0 || $isbn === "" || 
+        $description === "" ||$bookCondition === "" || $price < 0 || $status === "") {
+            $errors[] = "Please complete all required fields correctly.";
+        }
+    
+    $allowedConditions = ["New", "Gently Used", "Fair"];
+    $allowedStatuses = ["Available", "Reserved", "Sold"];
+
+    if (!in_array($bookCondition, $allowedConditions, true)) {
+        $errors[] = "Invalid book condition.";
+    }
+
+    if (!in_array($status, $allowedStatuses, true)) {
+        $errors[] = "Invalid availability status.";
+    }
 
     $imagePath ="";
 
@@ -24,13 +40,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $allowedExtensions = ["jpg", "jpeg", "png", "gif", "webp"];
 
         if (in_array($extension, $allowedExtensions, true)) {
-            $imagePath = uniqid("book_", true). "." .$extension;
-            $uploadPath = "assets/images/covers/" . $imagePath;
-            move_uploaded_file($temporaryName, $uploadPath);
+
+            $newFileName = uniqid("book_", true) . "." .$extension;
+            $uploadPath = "assets/images/covers/" . $newFileName;
+
+            if (move_uploaded_file($temporaryName, $uploadPath)) {
+                $imagePath = $newFileName;
+            }else{
+                $errors[] = "The cover image could not be uploaded.";
+            }
         }
     }
 
-    if ($imagePath !== "") {
+    if (empty($errors) && $imagePath !== "") {
         $sql = "INSERT INTO books (title, author, genre, publication_year, isbn, description, book_condition, price, image_path, status)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
@@ -46,8 +68,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $message = "Book could not be added.";
         }
         mysqli_stmt_close($stmt);
-    }else {
+    }elseif ($imagePath === "" && empty($errors)) {
         $message = "Please upload a valid image.";
+
+    }elseif (!empty($errors)) {
+        $message = $errors[0];
     }
 }
 ?>
@@ -57,10 +82,11 @@ $pageTitle = "BookVerse | Add Book";
 include "includes/header.inc";
 include "includes/nav.inc";
 ?>
+
 <main class="add-page">
-    <div class="container add-container">
+    <div class="container add-container py-3">
         <h1 class="add-title mb-3">
-            <span class="material-icons">add_book</span>
+            <span class="material-icons">add_box</span>
             Add new Book
         </h1>
 
@@ -120,7 +146,7 @@ include "includes/nav.inc";
                         Publication Year
                     </label>
 
-                    <input type="number" class="form-control" id="publicationYear" name="publication_year" placeholder="2024" required>
+                    <input type="number" class="form-control" id="publicationYear" name="publication_year" placeholder="2024" min="1000" max="2026" required>
                 </div>
 
                 <div class="col-md-6 mb-3">
@@ -129,7 +155,7 @@ include "includes/nav.inc";
                         Price
                     </label>
 
-                    <input type="number" class="form-control" id="price" name="price" placeholder="19.99" step="0.01" required>
+                    <input type="number" class="form-control" id="price" name="price" placeholder="19.99" min="0" step="0.01" required>
                 </div>
             </div>
 
@@ -180,7 +206,6 @@ include "includes/nav.inc";
             <!-- Image Preview -->
             <div id="imagePreviewContainer" class="image-preview-container d-none">
                 <p class="preview-file-name" id="previewFileName"></p>
-                <img id="imagePreview" src="" alt="Book cover preview">
             </div>
 
             <!-- Availability -->
