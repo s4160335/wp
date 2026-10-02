@@ -33,7 +33,7 @@ include "includes/nav.inc";
     </main>
 
     <?php include "includes/footer.inc"; ?>
-        <?php exit; ?>
+    <?php exit; ?>
     <?php endif; ?>
 
 
@@ -60,7 +60,7 @@ include "includes/nav.inc";
                 </p>
                 
                 <?php $status = strtolower($book["status"]); ?>
-                <span class="badge status-<?php echo $status; ?>">
+                <span class="badge status-<?php echo htmlspecialchars($status); ?>">
                     <?php echo htmlspecialchars($book["status"]); ?>
                 </span>
 
@@ -117,13 +117,9 @@ include "includes/nav.inc";
                         <span class="material-icons">add</span>
                         Add Similar Book
                     </a>
-
                 </div>
-
             </div>
         </div>
-
     </div>
 </main>
-
 <?php include "includes/footer.inc"; ?>

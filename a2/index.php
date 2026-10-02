@@ -1,5 +1,9 @@
 <?php
 include "includes/db_connect.inc";
+
+$sql = "SELECT * FROM books ORDER BY created_at ASC, book_id ASC LIMIT 4";
+$result = mysqli_query($conn, $sql);
+
 $pageTitle = "BookVerse | Home";
 include "includes/header.inc";
 include "includes/nav.inc";
@@ -101,7 +105,7 @@ include "includes/nav.inc";
                                     $<?php echo number_format((float) $book["price"], 2); ?>
                                 </p>
 
-                                <a href="details.php?id=<?php echo $book["book_id"]; ?>" class="btn view-details-btn">
+                                <a href="details.php?id=<?php echo (int) $book["book_id"]; ?>" class="btn view-details-btn">
                                     <span class="material-icons">visibility</span>
                                     View Details
                                 </a>

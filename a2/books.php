@@ -5,7 +5,7 @@ $result = mysqli_query($conn, $sql);
 ?>
 
 <?php
-$pageTitle = "BookVerse | Browser Books";
+$pageTitle = "BookVerse | Browse Books";
 include "includes/header.inc";
 include "includes/nav.inc";
 ?>
@@ -19,7 +19,7 @@ include "includes/nav.inc";
             All Books
             </h1>
 
-            <!-- Status Tilter -->
+            <!-- Status Filter -->
             <div class="book-filter mb-4">
             <label for="statusFilter">Filter by Status:</label>
 
@@ -38,7 +38,7 @@ include "includes/nav.inc";
                 <table class="table books-table align-middle mb-0">
                     <tbody>
                         <?php while ($book = mysqli_fetch_assoc($result)): ?>
-                            <tr data-status="<?php echo strtolower($book["status"]); ?>">
+                            <tr data-status="<?php echo htmlspecialchars(strtolower($book["status"])); ?>">
                                 <td>
                                     <a href="details.php?id=<?php echo $book["book_id"]; ?>">
                                         <?php echo htmlspecialchars($book["title"]); ?>
@@ -51,7 +51,7 @@ include "includes/nav.inc";
                                 <td><?php echo number_format((float) $book["price"], 2); ?></td>
 
                                 <td><?php $status = strtolower($book["status"]); ?>
-                                    <span class="badge status-<?php echo $status; ?>">
+                                    <span class="badge status-<?php echo htmlspecialchars($status); ?>">
                                         <?php echo htmlspecialchars($book["status"]); ?>
                                     </span>
                                 </td>
