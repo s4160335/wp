@@ -7,8 +7,8 @@
 |---|---|
 | Student name | Abdifatah Mohamed |
 | Student ID | s4160335 |
-| GitHub repository URL | TODO |
-| Deployed website URL | TODO |
+| GitHub repository URL | https://github.com/s4160335/wp/tree/main/a2|
+| Deployed website URL | https://jupiter.csit.rmit.edu.au/~s4160335/wp/a2/ |
 
 ---
 
@@ -326,8 +326,8 @@ Complete this section after testing your website.
 | Add Book form validation | Pass | for tested Valid submission validation submission processed successfully |
 | Image upload | Pass | Test cover received a unique filename and was moved to the covers folder |
 | Image preview | Pass | Valid selected image displays in the preview |
-| Deployed site links/assets | Pending| To be tested after deployment |
-| Deployed database content | Pending | To be tested after deployment |
+| Deployed site links/assets | Pass | Links, images, CSS, JavaScript and interactive features work correctly on Coreteaching|
+| Deployed database content | Pass | Database reads and writes were successfully tested using the Jacob 5 database |
 
 ---
 
@@ -337,14 +337,14 @@ Provide details of your deployed website.
 
 | Item | Details |
 |---|---|
-| Deployed website URL | TODO |
-| Coreteaching server | Titan Coreteaching|
+| Deployed website URL | https://jupiter.csit.rmit.edu.au/~s4160335/wp/a2/ |
+| Coreteaching server | Jupiter Coreteaching|
 | Jacob 5 database name | 'S4160335_159009' |
 | Deployment folder | public_html/wp/a2 |
 | `.htaccess` location | public_html/.htaccess |
-| Upload folder permissions | TODO |
+| Upload folder permissions | `chmod 777` for `a2/assets/images/covers` on Coreteaching |
 
-Deployment testing will be completed after the project is deployed to Coreteaching and connected to the Jacob 5 database. The live PHP pages. navigation, assets, database reads and writes, imagpe uploads and status filtering will then be checked.
+After deployment, I checked that all PHP pages, navigation, links, images and assets worked correctly on Coreteaching. I tested database reads and writes using the Jacob 5 database, including adding a temporary test book and confirming that the record was inserted successfully. I also tested image uploads, the Books status filter, Details pages and Gallery modal navigation on the live website.
 
 ---
 
@@ -397,4 +397,4 @@ Confirm that your process evidence file has been completed.
 
 ## 20. Known Issues or Limitations
 
-> No known issues identified during local testing.
+> No known issues at the time of submission.
