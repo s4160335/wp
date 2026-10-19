@@ -331,13 +331,13 @@ footer p {
 }
 
 .book-filter .form-select.filter-reserved {
-	background-color: #0f172a;
+	background-color: #475569;
 	color: #ffffff;
 	border-color: #14b8a6;
 }
 
 .book-filter .form-select.filter-sold {
-	background-color: #475569;
+	background-color: #0f172a;
 	color: #ffffff;
 	border-color: #475569;
 }
@@ -709,6 +709,12 @@ footer p {
     font-weight: 700;
 }
 
+.details-row a {
+	font: inherit;
+	font-size: inherit;
+	font-weight: inherit;
+}
+
 .details-price {
     color: #0d9488;
     font-weight: 700;
@@ -763,7 +769,6 @@ footer p {
 }
 
 /* A3 - Registration Page */
-
 .register-card {
     background-color: #1f2937;
     border: 1px solid #263445;
@@ -826,4 +831,60 @@ footer p {
 .register-form {
 	width: 85%;
 	margin: 0 auto;
+}
+
+/* A3 - Login Page */
+
+.login-page {
+    min-height: 70vh;
+    padding: 45px 15px 80px;
+}
+
+.login-card {
+    max-width: 430px;
+    margin: 0 auto;
+    padding: 30px;
+}
+
+.login-title {
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+}
+
+.login-card .form-label {
+    font-size: 0.85rem;
+    margin-bottom: 6px;
+}
+
+.login-card .form-control {
+    padding: 10px 12px;
+    font-size: 0.9rem;
+}
+
+.login-card .btn-primary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 10px;
+	padding: 7px 10px;
+    background-color: #0d9488;
+    border-color: #0d9488;
+}
+
+.login-card .btn-primary:hover {
+    background-color: #0f766e;
+    border-color: #0f766e;
+}
+
+.login-card .btn-primary .material-icons {
+    font-size: 16px;
+}
+
+.login-footer {
+    text-align: center;
+    font-size: 0.85rem;
+    margin-top: 25px;
+    padding-top: 6px;
+    border-top: 1px solid #263445;
 }
