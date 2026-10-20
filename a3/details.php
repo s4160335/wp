@@ -1,6 +1,10 @@
 <?php
 include "includes/db_connect.inc";
 
+if (empty($_SESSION["csrf_token"])) {
+    $_SESSION["csrf_token"] = bin2hex(random_bytes(32));
+}
+
 $book = null;
 
 if (isset($_GET["id"])) {
@@ -21,22 +25,23 @@ if (isset($_GET["id"])) {
 $isOwner = $book && isset($_SESSION["user_id"]) && $book["user_id"] !== null
     && (int) $book["user_id"] === (int) $_SESSION["user_id"];
 
-// Handle book deletion
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["delete_book"])) {
 
-    // Check that the user is logged in
     if (!isset($_SESSION["user_id"])) {
         http_response_code(403);
         exit("You must be logged in to delete a book.");
     }
 
-    // Check that the logged-in user owns this book
+    if (!isset($_POST["csrf_token"]) || !is_string($_POST["csrf_token"]) || !hash_equals($_SESSION["csrf_token"], $_POST["csrf_token"])) {
+        http_response_code(403);
+        exit("Invalid security token.");
+    }
+
     if (!$isOwner) {
         http_response_code(403);
         exit("You are not authorised to delete this book.");
     }
 
-    // Delete the book using a prepared statement
     $deleteSql = "DELETE FROM books WHERE book_id = ? AND user_id = ?";
     $deleteStmt = mysqli_prepare($conn, $deleteSql);
 
@@ -50,14 +55,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["delete_book"])) {
     mysqli_stmt_close($deleteStmt);
 
     if ($deleted) {
-
-        // Remove the uploaded cover only when it is safe
         $imageName = $book["image_path"];
 
-        if (is_string($imageName) &&
-            preg_match('/^book_[a-f0-9]{13}\.[0-9]{8}\.(jpg|jpeg|png|gif|webp)$/i', $imageName)) {
-
-            // Check whether another book uses the same image
+        $validFilename = is_string($imageName) &&
+            preg_match('/^book_[a-f0-9]{13,14}\.[0-9]{8}\.(jpg|jpeg|png|gif|webp)$/i', $imageName);
+            
+        if ($validFilename) {
             $checkSql = "SELECT COUNT(*) FROM books WHERE image_path = ?";
             $checkStmt = mysqli_prepare($conn, $checkSql);
 
@@ -67,13 +70,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["delete_book"])) {
             mysqli_stmt_fetch($checkStmt);
             mysqli_stmt_close($checkStmt);
 
-            // Remove the file only when no other book references it
             if ((int) $imageCount === 0) {
-
                 $imagePath = __DIR__ . "/assets/images/covers/" . $imageName;
 
                 if (is_file($imagePath)) {
-                    if (!unlink($imagePath)) {
+                    if (!unlink($imagePath)){
                         error_log("Unable to delete uploaded cover: " . $imagePath);
                     }
                 }
@@ -86,13 +87,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["delete_book"])) {
         header("Location: books.php");
         exit;
     }
-
-    // Handle unsuccessful deletion
+    
     $_SESSION["flash_message"] = "Unable to delete the book.";
     $_SESSION["flash_type"] = "error";
 
     header("Location: details.php?id=" . $bookId);
     exit;
+}
+
+if (!$book) {
+    http_response_code(404);
 }
 
 $pageTitle = $book
@@ -192,7 +196,7 @@ include "includes/nav.inc";
                     <h2>Description</h2>
 
                     <p>
-                        <?php echo htmlspecialchars($book["description"]); ?>
+                        <?php echo htmlspecialchars($book["description"] ?? ""); ?>
                     </p>
                 </div>
 
@@ -244,6 +248,7 @@ include "includes/nav.inc";
                         <form method="POST" action="details.php?id=<?php echo (int) $book["book_id"]; ?>">
                             <input type="hidden" name="delete_book" value="1">
 
+                            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION["csrf_token"]); ?>">
                             <button type="submit" class="btn btn-danger">
                                 Delete Book
                             </button>
