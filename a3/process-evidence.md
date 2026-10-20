@@ -22,53 +22,74 @@ You must maintain this file throughout development.
 ## Bug 1
 
 **Date Identified:**  
-(e.g., 15/03/2026)
+19/10/2026
 
 **Date Fixed:**  
-(e.g., 15/03/2026)
+20/10/2026
 
 **File:**  
-(e.g., about.html)
+a3/details.php
 
 **Related Commit:**  
-(e.g., abc1234)
+9ccba3d - Fix book cover deletion and improve details page security
+https://github.com/s4160335/wp/commit/9ccba3d32946dab30db646ad649e4f4412aca419
 
 **Symptom:**  
-What went wrong?
+After deleting a book, its database record was removed, but the uploaded cover image remined in the covers folder.
 
 **Steps to Reproduce:**  
-How can the issue be triggered?
+1. Log in to BookVerse.
+2. Add a temporary book with an uploaded cover image.
+3. Delete the book from its Details page.
+4. Check the assets/images/covers folder.
+5. Observe that the uploaded image still exists.
 
 **Root Cause:**  
-Why did the issue occur?
+The deletion code used `$imagesPath` instead of the defined variable `$imagePath`. The filename validation pattern also initial did not accept some generated filenames.
 
 **Fix:**  
-What did you change?
+Corrected the variable name to `$imagePath` and uploaded the filename validation pattern to accept both 13- and 14-character hexadecimal identifiers.
 
 **Verification:**  
-How did you confirm the fix?
+Added another temporary book with a cover image, deleted it, and cofirmed that both the database record and uploaded cover file were removed successfully.
 
 ---
 
 ## Bug 2
 
-**Date Identified:**  
+**Date Identified:**
+19/10/2026
 
-**Date Fixed:**  
+**Date Fixed:** 
+20/10/2026 
 
-**File:**  
+**File:**
+a3/details.php
 
-**Related Commit:**  
+**Related Commit:**
+9ccba3d - Fix book cover deletion and improve details page security
+https://github.com/s4160335/wp/commit/9ccba3d32946dab30db646ad649e4f4412aca419 
 
-**Symptom:**  
+**Symptom:**
+When a user opened a book details page with an invalid or missing book ID, the page displayed "Book not found." but did not return the appropriate HTTP 404 status.
 
-**Steps to Reproduce:**  
+**Steps to Reproduce:**
+1. Opened `http://localhost/wp/details.php?if=999` .
+2. Observed the "Book not found." message.
+3. Check the HTTP response status.
+4. Observe that the page originally returned HTTP 200 instead of HTP 404.
 
-**Root Cause:**  
+**Root Cause:**
+The page displayed an error message when a book was not found, but the PHP code did not explicity set the HTTP response status to 404.
 
-**Fix:**  
+**Fix:**
+Added the following PHP code before including the header and navigation:
+if (!$boo) {
+    http_response_code(404);
+}
 
-**Verification:**  
+**Verification:**
+Opened the Details page with a nonxistet book ID and confirmed that :Book not found." still appeared. Used `curl.exe - I` in the VS code ternimal to verify that the server returned HTTP 404 Not found.
 
 ---
 
@@ -77,53 +98,62 @@ How did you confirm the fix?
 ## AI Task 1
 
 **Date:**  
-(e.g., 15/03/2026)
+20/10/2026
 
 **Task Description:**  
-What were you trying to do?
+Debug the book deletion feature because uploaded cover images were not being removed after deleting a book.
 
 **Tool Used:**  
-(e.g., GitHub Copilot, ChatGPT)
+ChatGPT
 
 **Prompt / Input:**  
-(What did you type?)
+Help me to investigate why the uploaded cover image remained in the assets/images/covers folder after its book was deleted.
 
 **AI Output Summary:**  
-(What did it generate?)
+ChatGPT suggested checking the uploaded filename validation pattern, file path, and unlink() function. The filename validation was updated to support the generated filenames.
 
 **What You Accepted:**  
-(Which parts did you keep?)
+I accepted the suuggestion to investigate the image deletion logic and update the filename validation pattern.
 
 **What You Changed:**  
-(What did you modify and why?)
+After further testing, I identified a variable name mismatch. The code used `$imagesPath` instead of `$imagePath`. I corrected the variable name kept the updated filename validation.
 
 **Validation Performed:**  
-How did you test correctness?
+I created a temporary book with an uploaded cover image, deleted the book, and checked that both the database record and image file were removed successfully.
 
 **Issues Identified:**  
-(Any errors or problems in AI output?)
+The filename validation initially rejiucted some generated filenames. A separate variable name error also prevented the image filename being deleted.
 
 ---
 
 ## AI Task 2
 
-**Date:**  
+**Date:** 
+20/10/2026 
 
-**Task Description:**  
+**Task Description:**
+Improve error handling in details.php when a book ID is invalid or missing.
 
-**Tool Used:**  
+**Tool Used:** 
+ChatGPT
 
 **Prompt / Input:**  
+I shared screenshot showing the "Book not found." message and provided the relevant PHP code for review.
 
 **AI Output Summary:**  
+ChatGPT suggested adding htt_response_code(404) before including the page header and navigation so that nonexistent books return the correct HTTP status.
 
 **What You Accepted:**  
+I accepted the suggested HTTP 404 handling because it improves the server reponse without changing the existing page design.
 
 **What You Changed:**  
+I added an if (!$book) condition that calls htt_response_code(404) before loading the page header.
 
 **Validation Performed:**  
+I opened details.php with a nonexistent book ID and confirmed that the page still displayed "Book not found." Then ran `curl.exe - I` in the VS code ternimal and confirmed HTTP/1.1 404 Not found.
 
 **Issues Identified:**  
+The page displayed a suitable error message but did not explicity return HTTP 404 when the requested book did not exist.
 
 ---
 
