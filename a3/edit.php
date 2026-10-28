@@ -316,7 +316,13 @@ include "includes/nav.inc";
                 </div>
 
                 <!-- Optional Replacement -->
-                <input type="file" class="form-control" id="coverImage" name="image_path" accept=".jpg, .jpeg, .png">
+                <input type="file" class="form-control" id="coverImage" name="image_path" accept=".jpg, .jpeg, .png, .gif, .webp">
+
+                <div id="imageError" class="text-danger mt-2"></div>
+                
+                <div id="imagePreviewContainer" class="mt-3 d-none">
+                    <p id="previewFileName" class="mb-2"></p>
+                </div>
             </div>
 
             <!-- Save Changes Button -->
