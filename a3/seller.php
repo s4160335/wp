@@ -54,6 +54,47 @@ include "includes/nav.inc";
                     </p>
                 </div>
             </aside>
+
+            <!-- Seller's Books -->
+            <section class="col-12 col-lg-8">
+                <h2 class="seller-books-title">
+                    Books by <?php echo htmlspecialchars($seller["username"]); ?>
+                </h2>
+
+                <?php if (empty($books)) : ?>
+                    <p class="text-light">
+                        This seller has not listed any books yet.
+                    </p>
+                <?php else: ?>
+
+                    <div class="row g-3">
+                        <?php foreach($books as $book): ?>
+                            <div class="col-12 col-sm-6 col-md-4">
+
+                                <article class="card seller-book-card h-100">
+                                    <img src="assets/images/covers/<?php echo htmlspecialchars($book["image_path"] ?? "placeholder.jpg"); ?>"
+                                        class="card-img-top seller-book-image" alt="<?php echo htmlspecialchars($book["title"]); ?> cover">
+
+                                    <div class="card-body">
+                                        <h3 class="seller-book-title">
+                                            <?php echo htmlentities($book["title"]); ?>
+                                        </h3>
+
+                                        <p class="seller-book-price">
+                                            $<?php echo number_format((float) $book["price"], 2); ?>
+                                        </p>
+
+                                        <a href="details.php?id=<?php echo (int) $book["book_id"]; ?>" 
+                                            class="btn btn-sm seller-view-btn">
+                                            View
+                                        </a>
+                                    </div>
+                                </article>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+            </section>
         </div>
     </div>
 </main>

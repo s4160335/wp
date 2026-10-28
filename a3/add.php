@@ -1,5 +1,13 @@
 <?php include "includes/db_connect.inc";
 
+if (!isset($_SESSION["user_id"])) {
+    $_SESSION["flash_message"] = "Please log in to add a book.";
+    $_SESSION["flash_type"] = "error";
+
+    header("Location: login.php");
+    exit;
+}
+
 $message ="";
 $errors = [];
 
@@ -13,11 +21,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $bookCondition = $_POST["book_condition"] ?? "";
     $price = (float) ($_POST["price"] ?? 0);
     $status = $_POST["status"] ?? "";
+    $userId = (int) $_SESSION["user_id"];
 
     if ($title === "" || $author === "" || $genre === "" || $publicationYear <= 0 || $isbn === "" || 
         $description === "" ||$bookCondition === "" || $price < 0 || $status === "") {
             $errors[] = "Please complete all required fields correctly.";
-        }
+    }
+
+    if (!isset($_POST["agree"])) {
+        $errors[] = "Please confirm that the book information is accurate.";
+    }
     
     $allowedConditions = ["New", "Gently Used", "Fair"];
     $allowedStatuses = ["Available", "Reserved", "Sold"];
@@ -32,40 +45,55 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $imagePath ="";
 
-    if (isset($_FILES["image_path"]) && $_FILES["image_path"]["error"] === UPLOAD_ERR_OK) {
+    if (!isset($_FILES["image_path"]) || $_FILES["image_path"]["error"] === UPLOAD_ERR_NO_FILE) {
+       $errors[] = "Please upload a book cover image.";
+
+    } elseif ($_FILES["image_path"]["error"] !== UPLOAD_ERR_OK) {
+        $errors[] = "An error occurred while uploading the image.";
+
+    } else {
         $originalName = $_FILES["image_path"]["name"];
         $temporaryName = $_FILES["image_path"]["tmp_name"];
 
         $extension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
         $allowedExtensions = ["jpg", "jpeg", "png", "gif", "webp"];
 
-        if (in_array($extension, $allowedExtensions, true)) {
+        if (!in_array($extension, $allowedExtensions, true)) {
+            $errors[] = "Only JPG, JPEG, PNG, GIF, and WEBP images are allowed.";
 
-            $newFileName = uniqid("book_", true) . "." .$extension;
+        } elseif (getimagesize($temporaryName) === false) {
+            $errors[] = "The uploaded file is not a valid image.";
+
+        } else {
+            $newFileName = uniqid("book_", true) . "." . $extension;
             $uploadPath = "assets/images/covers/" . $newFileName;
 
             if (move_uploaded_file($temporaryName, $uploadPath)) {
                 $imagePath = $newFileName;
-            }else{
+            } else {
                 $errors[] = "The cover image could not be uploaded.";
             }
         }
     }
 
     if (empty($errors) && $imagePath !== "") {
-        $sql = "INSERT INTO books (title, author, genre, publication_year, isbn, description, book_condition, price, image_path, status)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO books (title, author, genre, publication_year, isbn, description, book_condition, price, image_path, status, user_id)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
         $stmt = mysqli_prepare($conn, $sql);
 
-        mysqli_stmt_bind_param($stmt, "sssisssdss", $title, $author, $genre, $publicationYear, $isbn, $description, $bookCondition,
-            $price, $imagePath, $status);
+        mysqli_stmt_bind_param($stmt, "sssisssdssi", $title, $author, $genre, $publicationYear, $isbn, $description, $bookCondition,
+            $price, $imagePath, $status, $userId);
         
         if (mysqli_stmt_execute($stmt)) {
             $message = "Book added successfully.";
         
         }else {
             $message = "Book could not be added.";
+
+            if ($imagePath !== "" && is_file($uploadPath)) {
+                unlink($uploadPath);
+            }
         }
         mysqli_stmt_close($stmt);
     }elseif ($imagePath === "" && empty($errors)) {

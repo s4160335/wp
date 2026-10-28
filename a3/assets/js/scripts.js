@@ -81,7 +81,7 @@ if (galleryModal) {
 // Add Book - Image Validation and Preview
 const coverImage = document.getElementById("coverImage");
 
-if (coverImage) {
+if (coverImage && document.getElementById("imagePreviewContainer")) {
 	const imagePreviewContainer = document.getElementById("imagePreviewContainer");
 	
 	const imagePreview = document.createElement("img");
@@ -120,3 +120,15 @@ if (coverImage) {
 		imagePreviewContainer.classList.remove("d-none");
 	});
 }
+
+// A3 - Automatically dismiss login/logout flash messages
+document.addEventListener("DOMContentLoaded", function () {
+    const flashMessage = document.getElementById("flashMessage");
+
+    if (flashMessage) {
+        setTimeout(function () {
+            const alert = bootstrap.Alert.getOrCreateInstance(flashMessage);
+            alert.close();
+        }, 5000);
+    }
+});
