@@ -2,7 +2,9 @@
 include "includes/db_connect.inc";
 
 $sql = "SELECT * FROM books ORDER BY book_id ASC";
-$result = mysqli_query($conn, $sql);
+$stmt = mysqli_prepare($conn, $sql);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
 
 $pageTitle = "BookVerse | Gallery";
 include "includes/header.inc";
@@ -29,11 +31,12 @@ include "includes/nav.inc";
                     </button>
                 </div>
             <?php endwhile; ?>
+            <?php mysqli_stmt_close($stmt); ?>
         </div>
     </div>
 
     <!-- Bootstrap Modal -->
-        <div class="modal fade" id="galleryModal" tabindex="-1" role="dialog"
+        <div class="modal fade" id="galleryModal" tabindex="-1"
             aria-labelledby="galleryModalLabel" aria-hidden="true">
             
         <div class="modal-dialog modal-dialog-centered">

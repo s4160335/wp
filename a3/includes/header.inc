@@ -28,22 +28,3 @@
 </head>
 
 <body>
-
-<?php
-if (session_status() === PHP_SESSION_ACTIVE && isset($_SESSION["flash_message"])):
-    $flashMessage = $_SESSION["flash_message"];
-    $flashType = $_SESSION["flash_type"] ?? "info";
-
-    $alertClass = $flashType === "success" ? "success" : "danger";
-    unset($_SESSION["flash_message"], $_SESSION["flash_type"]);
-?>
-
-<div class="container mt-3">
-    <div class="alert alert-<?php echo $alertClass; ?> alert-dismissible fade show" role="alert">
-        <?php echo htmlspecialchars($flashMessage); ?>
-
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-        </button>
-    </div>
-</div>
-<?php endif; ?>

@@ -1,7 +1,11 @@
 <?php include "includes/db_connect.inc";
 
-$sql ="SELECT * FROM books ORDER BY book_id ASC";
-$result = mysqli_query($conn, $sql);
+$sql ="SELECT books.*, users.username FROM books LEFT JOIN users ON books.user_id = users.user_id
+    ORDER BY books.book_id ASC";
+
+$stmt = mysqli_prepare($conn, $sql);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
 ?>
 
 <?php
@@ -40,7 +44,7 @@ include "includes/nav.inc";
                         <?php while ($book = mysqli_fetch_assoc($result)): ?>
                             <tr data-status="<?php echo htmlspecialchars(strtolower($book["status"])); ?>">
                                 <td>
-                                    <a href="details.php?id=<?php echo $book["book_id"]; ?>">
+                                    <a href="details.php?id=<?php echo (int) $book["book_id"]; ?>">
                                         <?php echo htmlspecialchars($book["title"]); ?>
                                     </a>
                                 </td>
@@ -55,10 +59,20 @@ include "includes/nav.inc";
                                         <?php echo htmlspecialchars($book["status"]); ?>
                                     </span>
                                 </td>
+
+                                <td><?php if ($book["user_id"] !== null && $book["username"] !== null): ?>
+                                    <a href="seller.php?id=<?php echo (int) $book["user_id"]; ?>">
+                                        <?php echo htmlspecialchars($book["username"]); ?>
+                                    </a>
+                                    <?php else: ?>
+                                        <span>Unknown Seller</span>
+                                        <?php endif; ?>
+                                </td>
                             </tr>
                         <?php endwhile; ?>
                     </tbody>
                 </table>
+                <?php mysqli_stmt_close($stmt); ?>
             </div>
         </div>
     </div>

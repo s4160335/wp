@@ -108,3 +108,22 @@ $username = $_SESSION["username"] ?? "";
         </div>
     </nav>
 </header>
+
+<?php
+if (session_status() === PHP_SESSION_ACTIVE && isset($_SESSION["flash_message"])):
+    $flashMessage = $_SESSION["flash_message"];
+    $flashType = $_SESSION["flash_type"] ?? "info";
+
+    $alertClass = $flashType === "success" ? "success" : "danger";
+    unset($_SESSION["flash_message"], $_SESSION["flash_type"]);
+?>
+
+<div class="container-fluid px-4 mt-2 mb-0">
+    <div class="alert alert-<?php echo $alertClass; ?> alert-dismissible fade show py-2 mb-2" id="flashMessage" role="alert">
+        <?php echo htmlspecialchars($flashMessage); ?>
+
+        <button type="button" class="btn-close p-2" data-bs-dismiss="alert" aria-label="Close">
+        </button>
+    </div>
+</div>
+<?php endif; ?>

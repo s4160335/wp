@@ -25,8 +25,10 @@ if (isset($_GET["id"])) {
 $isOwner = $book && isset($_SESSION["user_id"]) && $book["user_id"] !== null
     && (int) $book["user_id"] === (int) $_SESSION["user_id"];
 
+// Handle book deletion
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["delete_book"])) {
 
+    // Check that the user is logged in
     if (!isset($_SESSION["user_id"])) {
         http_response_code(403);
         exit("You must be logged in to delete a book.");
@@ -37,11 +39,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["delete_book"])) {
         exit("Invalid security token.");
     }
 
+    // Check that the logged-in user owns this book
     if (!$isOwner) {
         http_response_code(403);
         exit("You are not authorised to delete this book.");
     }
 
+    // Delete the book using a prepared statement
     $deleteSql = "DELETE FROM books WHERE book_id = ? AND user_id = ?";
     $deleteStmt = mysqli_prepare($conn, $deleteSql);
 
@@ -87,7 +91,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["delete_book"])) {
         header("Location: books.php");
         exit;
     }
-    
+
+    // Handle unsuccessful deletion
     $_SESSION["flash_message"] = "Unable to delete the book.";
     $_SESSION["flash_type"] = "error";
 

@@ -1,7 +1,5 @@
-<?php
-include "includes/db_connect.inc";
+<?php include "includes/db_connect.inc";
 
-// Retrieve the four most recently added books and their sellers
 $sql = "SELECT books.*, users.username
         FROM books
         LEFT JOIN users ON books.user_id = users.user_id
@@ -101,7 +99,7 @@ include "includes/nav.inc";
                             <img src="assets/images/covers/<?php echo htmlspecialchars($book["image_path"]); ?>"
                                 class="card-img-top" alt="<?php echo htmlspecialchars($book["title"]); ?>" >
 
-                            <div class="card-body">
+                            <div class="card-body d-flex flex-column">
                                 <h2 class="card-title">
                                     <?php echo htmlspecialchars($book["title"]); ?>
                                 </h2>
@@ -124,7 +122,7 @@ include "includes/nav.inc";
                                     </p>
                                 <?php endif; ?>
 
-                                <a href="details.php?id=<?php echo (int) $book["book_id"]; ?>" class="btn view-details-btn">
+                                <a href="details.php?id=<?php echo (int) $book["book_id"]; ?>" class="btn view-details-btn mt-auto align-self-start">
                                     <span class="material-icons">visibility</span>
                                     View Details
                                 </a>
